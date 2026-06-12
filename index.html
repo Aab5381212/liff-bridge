@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>昇馳報工</title>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<style>
+  body { display:flex; justify-content:center; align-items:center; height:100vh; margin:0; background:#e8f5e9; font-family:sans-serif; }
+  .msg { text-align:center; color:#555; font-size:16px; }
+</style>
+</head>
+<body>
+<div class="msg" id="msg">載入中…</div>
+<script>
+var LIFF_ID = '2010372632-hlfzKcOl';
+var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxYllubOn4zRXSFOC1aqy2zPIYUheIP-AAK61FH_rHoRikC40jiLppD0avOEs0ojjGs1Q/exec';
+
+async function start() {
+  try {
+    document.getElementById('msg').textContent = '正在驗證身份…';
+    await liff.init({ liffId: LIFF_ID });
+
+    var userId = '';
+    var displayName = '';
+
+    if (liff.isLoggedIn()) {
+      var profile = await liff.getProfile();
+      userId = profile.userId || '';
+      displayName = profile.displayName || '';
+    } else {
+      liff.login();
+      return;
+    }
+
+    var url = SCRIPT_URL + '?userId=' + encodeURIComponent(userId) + '&displayName=' + encodeURIComponent(displayName);
+    document.getElementById('msg').textContent = '跳轉中…';
+    window.location.replace(url);
+
+  } catch (e) {
+    document.getElementById('msg').innerHTML = '❌ 錯誤：' + e.message + '<br><br><a href="' + SCRIPT_URL + '">直接開啟報工頁面</a>';
+  }
+}
+
+start();
+</script>
+</body>
+</html>
